@@ -34,9 +34,9 @@
                             <td>{{user.id}}</td>
                             <td>{{user.name}}</td>
                             <td>{{user.email}}</td>
-                            <td>{{user.type}}</td>
+                            <td>{{user.type | upText}}</td>
                             <td>{{user.bio}}</td>
-                            <td>{{user.created_at}}</td>
+                            <td>{{user.created_at | myDate}}</td>
                             <td>
                                 <a href="#" class="blue">Edit <i class="fas fa-edit blue"></i></a>
                                 &nbsp;|&nbsp;
