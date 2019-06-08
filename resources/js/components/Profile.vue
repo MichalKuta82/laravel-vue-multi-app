@@ -65,16 +65,16 @@
                                     <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                                     <div class="col-sm-12">
-                                    <input type="" v-model="form.name" class="form-control" id="inputName" placeholder="Name" :class="{ 'is-invalid': form.errors.has('name') }">
-                                     <has-error :form="form" field="name"></has-error>
+                                    <input type="text" v-model="form.name" class="form-control" id="inputName" placeholder="Name">
+                                     
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                                     <div class="col-sm-12">
-                                    <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email"  :class="{ 'is-invalid': form.errors.has('email') }">
-                                     <has-error :form="form" field="email"></has-error>
+                                    <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email">
+                                     
                                     </div>
                                 </div>
 
@@ -82,8 +82,8 @@
                                     <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
 
                                     <div class="col-sm-12">
-                                    <textarea  v-model="form.bio" class="form-control" id="inputExperience" placeholder="Experience" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
-                                     <has-error :form="form" field="bio"></has-error>
+                                    <textarea class="form-control" v-model="form.bio" id="inputExperience" placeholder="Experience"></textarea>
+                                     
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -95,17 +95,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password" class="col-sm-12 control-label">Passport (leave empty if not changing)</label>
+                                    <label for="password" class="col-sm-12 control-label">Password (leave empty if not changing)</label>
 
                                     <div class="col-sm-12">
                                     <input type="password"
-                                        v-model="form.password"
                                         class="form-control"
                                         id="password"
-                                        placeholder="Passport"
-                                        :class="{ 'is-invalid': form.errors.has('password') }"
-                                    >
-                                     <has-error :form="form" field="password"></has-error>
+                                        placeholder="Password"
+                                        v-model="form.password">
+
                                     </div>
                                 </div>
 
@@ -130,8 +128,65 @@
 
 <script>
     export default {
+        data(){
+            return{
+                form: new Form({
+                    id: '',
+                    name: '',
+                    email: '',
+                    password: '',
+                    type: '',
+                    bio: '',
+                    photo: ''
+                })
+            }
+        },
+        methods: {
+            updateProfile(e){
+                //console.log('uploading');
+                let file = e.target.files[0];
+                console.log(file);
+                let reader = new FileReader();
+                if (file['size'] < 2111775) {
+                    reader.onloadend = (file) => {
+                        //console.log('RESULT', reader.result)
+                        this.form.photo = reader.result
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    Swal.fire({
+                      title: 'Error!',
+                      title: 'Oops...',
+                      text: 'The file is too large',
+                      type: 'error',
+                    })
+                }
+            },
+            updateInfo(){
+                this.$Progress.start();
+                this.form.put('api/profile/')
+                    .then(() => {
+
+                        Toast.fire({
+                          type: 'success',
+                          title: 'The user ' + this.form.name + ' has been updated successfully'
+                        });
+                        this.$Progress.finish();
+                    }).catch(() => {
+
+                        this.$Progress.fail();
+                        Swal.fire('Failed', 'There was something wrong.', 'warning');
+                    });
+            }
+        },
         mounted() {
             console.log('Component mounted.')
+        },
+        created(){
+            axios.get('api/profile')
+                .then(({data}) => {
+                    this.form.fill(data)
+                });
         }
     }
 </script>
