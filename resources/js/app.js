@@ -10,6 +10,9 @@ window.Vue = require('vue');
 
 import moment from 'moment';
 import VueRouter from 'vue-router';
+import Gate from './Gate';
+Vue.prototype.$gate = new Gate(window.user);
+
 import Routes from './routes.js';
 Vue.use(VueRouter);
 

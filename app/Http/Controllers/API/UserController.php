@@ -27,6 +27,7 @@ class UserController extends Controller
     public function index()
     {
         //
+        $this->authorize('isAdmin');
         return User::latest()->paginate(10);
     }
 
@@ -51,7 +52,7 @@ class UserController extends Controller
             'type' => $request->input('type'),
             'bio' => $request->input('bio'),
             'photo' => $request->input('photo'),
-            'password' => Hash::make($request->input('name')),
+            'password' => Hash::make($request->input('password')),
         ]);
     }
 
@@ -84,6 +85,14 @@ class UserController extends Controller
             $name = time() . '.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
             \Image::make($request->photo)->save(public_path('img/profile/') . $name);
             $request->merge(['photo' => $name]);
+
+            $userPhoto = public_path('/img/profile/') . $currentPhoto;
+            if (file_exists($userPhoto)) {
+                @unlink($userPhoto);
+            }
+        }
+        if (!empty($request->password)) {
+            $request->merge(['password' => Hash::make($request->input('password'))]);
         }
         $user->update($request->all());
         return ['message' => 'success'];
@@ -105,6 +114,9 @@ class UserController extends Controller
             'email' => 'required|string|email|max:191|unique:users,email,' . $user->id,
             'password' => 'sometimes|min:3',
         ]);
+        if (!empty($request->password)) {
+            $request->merge(['password' => Hash::make($request->input('password'))]);
+        }
         $user->update($request->all());
         return ['message' => 'Updated'];
     }
@@ -117,7 +129,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->authorize('isAdmin');
         $user = User::findOrFail($id);
         //delete user
         $user->delete();
