@@ -62,7 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <img src="./img/user.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <a href="#" class="d-block">{{ Auth::user()->name }}<br>{{ Auth::user()->type }}</a>
         </div>
       </div>
 
@@ -80,7 +80,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li>
-          @can('isAdmin')
+          @if( Gate::check('isAdmin') || Gate::check('isAuthor') )
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cog green"></i>
@@ -106,7 +106,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li>
-          @endcan
+          @endif
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
               <i class="nav-icon fas fa-user orange"></i>

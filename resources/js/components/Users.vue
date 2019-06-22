@@ -1,8 +1,8 @@
 <template>
     <div class="container mt-5">
-        <div class="row">
+        <div v-if="$gate.isAdminOrAuthor()" class="row">
           <div class="col-md-12">
-            <div v-if="$gate.isAdmin()" class="card">
+            <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Users Table</h3>
 
@@ -30,7 +30,7 @@
                             <th>Registered At</th>
                             <th>Modify</th>
                         </tr>
-                        <tr v-for="user in users" :key="user.id">
+                        <tr v-for="user in users.data" :key="user.id">
                             <td>{{user.id}}</td>
                             <td>{{user.name}}</td>
                             <td>{{user.email}}</td>
@@ -49,7 +49,12 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
+            <pagination :data="users" @pagination-change-page="getResults"></pagination>
           </div>
+        </div>
+
+        <div v-if="!$gate.isAdminOrAuthor()">
+            <not-found></not-found>
         </div>
         <!-- Modal -->
         <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
@@ -112,7 +117,7 @@
         data(){
             return{
                 editmode: false,
-                users: [],
+                users: {},
                 form: new Form({
                     id: '',
                     name: '',
@@ -171,10 +176,10 @@
                 
             },
             loadUsers(){
-                if(this.$gate.isAdmin()){
+                if(this.$gate.isAdminOrAuthor()){
                     axios.get('api/user')
                         .then(({data}) => {
-                            this.users = data.data;
+                            this.users = data;
                         });
                 }
             },
@@ -201,9 +206,12 @@
                     }
                 })
             },
-            // resetData(){
-            //     this.form.name = this.form.email = this.form.password = this.form.type = this.form.bio = this.form.photo = '';
-            // }
+            getResults(page = 1) {
+                axios.get('api/user?page=' + page)
+                    .then(response => {
+                        this.users = response.data;
+                    });
+            }
         },
         created(){
             this.loadUsers();

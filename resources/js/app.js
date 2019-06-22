@@ -72,6 +72,15 @@ Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue').default
 );
+
+Vue.component(
+    'not-found',
+    require('./components/NotFound.vue').default
+);
+
+Vue.component('pagination', 
+	require('laravel-vue-pagination')
+);
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
