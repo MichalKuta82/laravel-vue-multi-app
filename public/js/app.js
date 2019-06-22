@@ -2254,12 +2254,6 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this6 = this;
 
-    Fire.$on('searching', function () {
-      var query = _this6.$parent.search;
-      axios.get('api/findUser?q=' + query).then(function (data) {
-        _this6.users = data.data;
-      })["catch"](function () {});
-    });
     this.loadUsers();
     Fire.$on('afterAction', function () {
       _this6.loadUsers(); //listen for custom event Fire
@@ -62080,11 +62074,11 @@ var render = function() {
                     expression: "form.name"
                   }
                 },
-                [_vm._v(_vm._s(this.form.name))]
+                [_vm._v(_vm._s(_vm.form.name))]
               ),
               _vm._v(" "),
               _c("h5", { staticClass: "widget-user-desc" }, [
-                _vm._v(_vm._s(this.form.type))
+                _vm._v("Web Designer")
               ])
             ]
           ),
@@ -62789,15 +62783,15 @@ var render = function() {
                               _vm._v("Select User Role")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "Admin" } }, [
+                            _c("option", { attrs: { value: "admin" } }, [
                               _vm._v("Admin")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "User" } }, [
+                            _c("option", { attrs: { value: "user" } }, [
                               _vm._v("Standard User")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "Author" } }, [
+                            _c("option", { attrs: { value: "author" } }, [
                               _vm._v("Author")
                             ])
                           ]
@@ -78983,15 +78977,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 });
 var app = new Vue({
   el: '#app',
-  router: router,
-  data: {
-    search: ''
-  },
-  methods: {
-    searchit: _.debounce(function () {
-      Fire.$emit('searching');
-    }, 1000)
-  }
+  router: router
 });
 
 /***/ }),
@@ -79693,8 +79679,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Developer_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Developer.vue */ "./resources/js/components/Developer.vue");
 /* harmony import */ var _components_Dashboard_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Dashboard.vue */ "./resources/js/components/Dashboard.vue");
 /* harmony import */ var _components_Users_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Users.vue */ "./resources/js/components/Users.vue");
-/* harmony import */ var _components_NotFound_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/NotFound.vue */ "./resources/js/components/NotFound.vue");
-
 
 
 
@@ -79711,9 +79695,6 @@ __webpack_require__.r(__webpack_exports__);
 }, {
   path: '/users',
   component: _components_Users_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
-}, {
-  path: '*',
-  component: _components_NotFound_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
 }]);
 
 /***/ }),

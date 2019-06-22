@@ -88,9 +88,9 @@
                       <select v-model="form.type" type="text" name="type" id="type" 
                         class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
                         <option value="">Select User Role</option>
-                        <option value="Admin">Admin</option>
-                        <option value="User">Standard User</option>
-                        <option value="Author">Author</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">Standard User</option>
+                        <option value="author">Author</option>
                     </select>
                       <has-error :form="form" field="type"></has-error>
                     </div>
@@ -214,15 +214,6 @@
             }
         },
         created(){
-            Fire.$on('searching', () => {
-                let query = this.$parent.search;
-                axios.get('api/findUser?q=' + query)
-                    .then((data) => {
-                        this.users = data.data;
-                    }).catch(() => {
-
-                    });
-            });
             this.loadUsers();
             Fire.$on('afterAction', () => {
                 this.loadUsers(); //listen for custom event Fire
